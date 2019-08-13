@@ -195,6 +195,12 @@ class EclipseNewJavaProject:
         print("已填加主类：%s" % main_class)
 
     def new_jar(self):
+        """
+        先编译
+        再设置主清单
+        再打jar包
+        :return:
+        """
         pass
 
 if __name__ == '__main__':
