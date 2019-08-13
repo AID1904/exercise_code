@@ -16,6 +16,8 @@ class EclipseNewJavaProject:
     """
 
     def __init__(self):
+        self.path = ""
+        self.name = ""
         self.status = True
         self.main()
 
