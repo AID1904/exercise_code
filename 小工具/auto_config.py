@@ -6,6 +6,7 @@ auto_config.py
 """
 import os
 
+
 class EclipseNewJavaProject:
     """
     自动配置 java 的 eclipse project，适用于 vscode 开发
@@ -34,6 +35,8 @@ class EclipseNewJavaProject:
         os.mkdir("%s/src" % self.path)
         # 创建 lib 目录
         os.mkdir("%s/lib" % self.path)
+        # 创建 META-INF 目录
+        os.mkdir("%s/META-INF" % self.path)
         # 创建 .classpath 文件
         self.new_classpath()
         # 创建 .project 文件
@@ -141,9 +144,9 @@ class EclipseNewJavaProject:
         while True:
             self.__initial()
             c = input("创建项目成功，是否导入相关jar包？[y/n]：")
-            if c not in ("y","Y","n","N"):
+            if c not in ("y", "Y", "n", "N"):
                 continue
-            elif c in ("y","Y"):
+            elif c in ("y", "Y"):
                 self.import_jars()
             return self.main()
 
@@ -153,9 +156,10 @@ class EclipseNewJavaProject:
         print("2. 导入jar包")
         print("3. 重新生成.classpath文件")
         print("4. 重新生成.project文件")
+        print("5. 重新生成主清单文件")
+#        print("6. 自动打jar包")
         print("")
         print("退出请输入：q")
-        # print("5. 重新生成主清单文件")
         c = input("请输入选择：")
         if c == "q":
             return print("谢谢使用！")
@@ -170,6 +174,8 @@ class EclipseNewJavaProject:
             self.new_classpath()
         elif c == "4":
             self.new_project()
+        elif c == "5":
+            self.new_manifest()
         else:
             return self.main()
 
@@ -177,8 +183,19 @@ class EclipseNewJavaProject:
         """
         定义主清单
         """
-        pass
+        main_class = input("请设置主类：")
+        # 创建 MANIFEST.MF 文件
+        jar_list = os.listdir("%s/lib" % self.path)
+        class_path = jar_list[0]
+        for jar in jar_list[1:]:
+            class_path += " " + jar
+        with open("%s/META-INF/MANIFEST.MF" % self.path,"w+") as fw:
+            fw.write("Main-Class: %s\n" % main_class)
+            fw.write("Class-Path: %s\n" % class_path)
+        print("已填加主类：%s" % main_class)
 
+    def new_jar(self):
+        pass
 
 if __name__ == '__main__':
     EclipseNewJavaProject()
